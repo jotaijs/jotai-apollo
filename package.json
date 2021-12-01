@@ -13,10 +13,10 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "test": "jest && jest --setupFiles ./tests/setProviderLessMode.ts",
-    "test:ci": "jest",
-    "test:dev": "jest --watch --no-coverage",
-    "test:coverage:watch": "jest --watch",
+    "test": "jest && jest --setupFiles ./tests/setup.ts",
+    "test:ci": "jest --setupFiles ./tests/setup.ts",
+    "test:dev": "jest --setupFiles ./tests/setup.ts --watch --no-coverage",
+    "test:coverage:watch": "jest --setupFiles ./tests/setup.ts --watch",
     "prepare": "husky install"
   },
   "files": [
@@ -25,7 +25,8 @@
   "peerDependencies": {
     "@apollo-client": "*",
     "graphql": "*",
-    "jotai": "*"
+    "jotai": "*",
+    "wonka": "*"
   },
   "peerDependenciesMeta": {
     "jotai": {
@@ -36,19 +37,31 @@
     },
     "graphql": {
       "optional": false
+    },
+    "wonka": {
+      "optional": false
     }
   },
   "devDependencies": {
     "@apollo/client": "^3.5.5",
+    "@swc/core": "^1.2.114",
+    "@swc/jest": "^0.2.11",
+    "@testing-library/react": "^12.1.2",
     "@types/jest": "^27.0.3",
+    "@types/react": "^17.0.37",
+    "@types/react-dom": "^17.0.11",
+    "cross-fetch": "^3.1.4",
     "graphql": "^16.0.1",
+    "husky": "^7.0.4",
     "jest": "^27.4.2",
     "jotai": "^1.4.6",
+    "lint-staged": "^12.1.2",
+    "prettier": "^2.5.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "tsup": "^5.10.0",
     "typescript": "^4.5.2",
-    "husky": "^7.0.4",
-    "lint-staged": "^12.1.2",
-    "prettier": "^2.5.0"
+    "wonka": "^4.0.15"
   },
   "jest": {
     "rootDir": ".",
@@ -71,7 +84,10 @@
     "collectCoverageFrom": [
       "src/**/*.{js,ts,tsx}",
       "tests/**/*.{js,ts,tsx}"
-    ]
+    ],
+    "transform": {
+      "^.+\\.(t|j)sx?$": "@swc/jest"
+    }
   },
   "prettier": {
     "semi": false,
@@ -84,7 +100,6 @@
   "lint-staged": {
     "*.{js,ts,tsx,md}": [
       "prettier --write"
-    ],
-    "*.{js,css,md}": "prettier --write"
+    ]
   }
 }
