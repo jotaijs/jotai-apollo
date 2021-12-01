@@ -14,7 +14,7 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "test": "jest && jest --setupFiles ./tests/setup.ts",
-    "test:ci": "jest --setupFiles ./tests/setup.ts",
+    "test:ci": "tsc --noEmit && jest --setupFiles ./tests/setup.ts",
     "test:dev": "jest --setupFiles ./tests/setup.ts --watch --no-coverage",
     "test:coverage:watch": "jest --setupFiles ./tests/setup.ts --watch",
     "prepare": "husky install"
