@@ -15,7 +15,6 @@ jobs:
         with:
           node-version: '12'
           cache: yarn
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - run: yarn install --frozen-lockfile --check-files
       - name: Test Build # we don't have any other workflows to test build
         run: yarn build
