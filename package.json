@@ -1,6 +1,7 @@
 {
   "name": "jotai-apollo",
   "version": "0.0.0",
+  "license": "MIT",
   "exports": {
     "./package.json": "./package.json",
     ".": {
@@ -19,9 +20,7 @@
     "test:coverage:watch": "jest --setupFiles ./tests/setup.ts --watch",
     "prepare": "husky install"
   },
-  "files": [
-    "**"
-  ],
+  "files": ["**"],
   "peerDependencies": {
     "@apollo-client": "*",
     "graphql": "*",
@@ -69,22 +68,12 @@
     "moduleNameMapper": {
       "^jotai-apollo$": "<rootDir>/src/index.ts"
     },
-    "modulePathIgnorePatterns": [
-      "dist"
-    ],
+    "modulePathIgnorePatterns": ["dist"],
     "testRegex": "test.(js|ts|tsx)$",
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
-    "coverageReporters": [
-      "json",
-      "html",
-      "text",
-      "text-summary"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,ts,tsx}",
-      "tests/**/*.{js,ts,tsx}"
-    ],
+    "coverageReporters": ["json", "html", "text", "text-summary"],
+    "collectCoverageFrom": ["src/**/*.{js,ts,tsx}", "tests/**/*.{js,ts,tsx}"],
     "transform": {
       "^.+\\.(t|j)sx?$": "@swc/jest"
     }
@@ -98,8 +87,6 @@
     "printWidth": 80
   },
   "lint-staged": {
-    "*.{js,ts,tsx,md}": [
-      "prettier --write"
-    ]
+    "*.{js,ts,tsx,md}": ["prettier --write"]
   }
 }
