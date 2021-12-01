@@ -1,11 +1,8 @@
 import React, { Suspense } from 'react'
-import { interval, map, pipe, take, toPromise } from 'wonka'
 import { atom, Provider, useAtom } from 'jotai'
 import { atomWithQuery } from 'jotai-apollo'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { ApolloClient, gql } from '@apollo/client'
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 it('basic atomWithQuery test', async () => {
   const clientMock = {
