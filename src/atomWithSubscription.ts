@@ -5,7 +5,7 @@ import {
   OperationVariables,
   SubscriptionOptions,
 } from '@apollo/client'
-import { fromObservable, pipe, skip, subscribe } from 'wonka'
+import { fromObservable, pipe, subscribe } from 'wonka'
 import { atom } from 'jotai'
 import type { Atom, Getter } from 'jotai'
 import { clientAtom } from './clientAtom'
