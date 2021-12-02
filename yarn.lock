@@ -829,6 +829,11 @@
   dependencies:
     "@types/yargs-parser" "*"
 
+"@types/zen-observable@^0.8.3":
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/@types/zen-observable/-/zen-observable-0.8.3.tgz#781d360c282436494b32fe7d9f7f8e64b3118aa3"
+  integrity sha512-fbF6oTd4sGGy0xjHPKAt+eS2CrxJ3+6gQ3FGcBoIJR2TLAyCkCyI8JqZNy+FeON0AhVgNJoUumVoZQjBFUqHkw==
+
 "@wry/context@^0.6.0":
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/@wry/context/-/context-0.6.1.tgz#c3c29c0ad622adb00f6a53303c4f965ee06ebeb2"
@@ -1267,11 +1272,6 @@ concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
-
-consola@^2.15.3:
-  version "2.15.3"
-  resolved "https://registry.yarnpkg.com/consola/-/consola-2.15.3.tgz#2e11f98d6a4be71ff72e0bdf07bd23e12cb61550"
-  integrity sha512-9vAdYbHj6x2fLKC4+oPH0kFzY/orMZyG2Aj+kNylHxKGJ/Ed4dpNyAQYwJOdqO4zdM7XpVHmyejQDcQHrnuXbw==
 
 convert-source-map@^1.4.0, convert-source-map@^1.6.0, convert-source-map@^1.7.0:
   version "1.8.0"
@@ -3550,7 +3550,7 @@ zen-observable-ts@^1.2.0:
   dependencies:
     zen-observable "0.8.15"
 
-zen-observable@0.8.15:
+zen-observable@0.8.15, zen-observable@^0.8.15:
   version "0.8.15"
   resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.15.tgz#96415c512d8e3ffd920afd3889604e30b9eaac15"
   integrity sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==

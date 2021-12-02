@@ -20,7 +20,9 @@
     "test:coverage:watch": "jest --setupFiles ./tests/setup.ts --watch",
     "prepare": "husky install"
   },
-  "files": ["**"],
+  "files": [
+    "**"
+  ],
   "peerDependencies": {
     "@apollo-client": "*",
     "graphql": "*",
@@ -49,6 +51,7 @@
     "@types/jest": "^27.0.3",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
+    "@types/zen-observable": "^0.8.3",
     "cross-fetch": "^3.1.4",
     "graphql": "^16.0.1",
     "husky": "^7.0.4",
@@ -60,7 +63,8 @@
     "react-dom": "^17.0.2",
     "tsup": "^5.10.0",
     "typescript": "^4.5.2",
-    "wonka": "^4.0.15"
+    "wonka": "^4.0.15",
+    "zen-observable": "^0.8.15"
   },
   "jest": {
     "rootDir": ".",
@@ -68,12 +72,22 @@
     "moduleNameMapper": {
       "^jotai-apollo$": "<rootDir>/src/index.ts"
     },
-    "modulePathIgnorePatterns": ["dist"],
+    "modulePathIgnorePatterns": [
+      "dist"
+    ],
     "testRegex": "test.(js|ts|tsx)$",
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
-    "coverageReporters": ["json", "html", "text", "text-summary"],
-    "collectCoverageFrom": ["src/**/*.{js,ts,tsx}", "tests/**/*.{js,ts,tsx}"],
+    "coverageReporters": [
+      "json",
+      "html",
+      "text",
+      "text-summary"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,ts,tsx}",
+      "tests/**/*.{js,ts,tsx}"
+    ],
     "transform": {
       "^.+\\.(t|j)sx?$": "@swc/jest"
     }
@@ -87,6 +101,8 @@
     "printWidth": 80
   },
   "lint-staged": {
-    "*.{js,ts,tsx,md}": ["prettier --write"]
+    "*.{js,ts,tsx,md}": [
+      "prettier --write"
+    ]
   }
 }
