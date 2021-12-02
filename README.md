@@ -12,7 +12,7 @@ yarn add jotai @apollo/client graphql wonka
 
 ```ts
 import { useAtom } from 'jotai'
-import { ApolloClient } from '@apollo/client'
+import { ApolloClient, gql } from '@apollo/client'
 import { atomWithQuery } from 'jotai-apollo'
 
 const client = new ApolloClient({ ... })
@@ -48,7 +48,7 @@ TODO
 
 ```js
 import { useAtom } from 'jotai'
-import { ApolloClient } from '@apollo/client'
+import { ApolloClient, gql } from '@apollo/client'
 import { atomWithMutation } from 'jotai-apollo'
 
 const client = new ApolloClient({ ... })
@@ -84,7 +84,7 @@ TODO
 
 ```js
 import { useAtom } from 'jotai'
-import { ApolloClient } from '@apollo/client'
+import { ApolloClient, gql } from '@apollo/client'
 import { atomWithSubscription } from 'jotai-apollo'
 
 const client = new ApolloClient({ ... })
