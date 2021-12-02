@@ -17,7 +17,7 @@ export function atomWithMutation<
   Cache extends ApolloCache<any> = ApolloCache<any>,
   Extensions = Record<string, any>
 >(
-  createMutation: (
+  createMutationArgs: (
     get: Getter
   ) => MutationOptions<Data, Variables, Context, Cache>,
   getClient: (get: Getter) => ApolloClient<unknown> = (get) => get(clientAtom)
@@ -40,7 +40,7 @@ export function atomWithMutation<
         new Promise<FetchResult<Data, Context, Extensions>>(() => {}) // new fetch
       )
       const client = getClient(get)
-      const mutation = createMutation(get)
+      const mutation = createMutationArgs(get)
 
       client
         .mutate({

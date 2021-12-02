@@ -36,14 +36,6 @@ export function atomWithQuery<
   Variables extends object = OperationVariables
 >(
   createQueryArgs: (get: Getter) => QueryArgs<Variables, Data>,
-  getClient?: (get: Getter) => ApolloClient<unknown>
-): WritableAtom<ApolloQueryResult<Data> | null, AtomWithQueryAction>
-
-export function atomWithQuery<
-  Data = any,
-  Variables extends object = OperationVariables
->(
-  createQueryArgs: (get: Getter) => QueryArgs<Variables, Data>,
   getClient: (get: Getter) => ApolloClient<unknown> = (get) => get(clientAtom)
 ) {
   type ResultAtom = PrimitiveAtom<
@@ -75,7 +67,7 @@ export function atomWithQuery<
         // New subscription is working, ignoring old one
         return
       }
-      if (!isApolloQueryResultWithData(result)) {
+      if (!('data' in result)) {
         throw new Error('result does not have data')
       }
       if (resolve) {
@@ -165,7 +157,3 @@ export function atomWithQuery<
 
   return queryAtom
 }
-
-const isApolloQueryResultWithData = <Data>(
-  result: ApolloQueryResult<Data>
-): result is ApolloQueryResult<Data> => 'data' in result
