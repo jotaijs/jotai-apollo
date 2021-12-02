@@ -24,7 +24,7 @@
     "**"
   ],
   "peerDependencies": {
-    "@apollo-client": "*",
+    "@apollo/client": "*",
     "graphql": "*",
     "jotai": "*",
     "wonka": "*"
@@ -33,7 +33,7 @@
     "jotai": {
       "optional": false
     },
-    "@apollo-client": {
+    "@apollo/client": {
       "optional": false
     },
     "graphql": {
