@@ -45,7 +45,7 @@ it('subscription basic test', async () => {
     )
   }
 
-  const { findByText, getByText } = render(
+  const { getByText } = render(
     <Provider>
       <Suspense fallback="loading">
         <Counter />
@@ -53,7 +53,9 @@ it('subscription basic test', async () => {
     </Provider>
   )
 
-  await findByText('loading')
+  waitFor(() => {
+    getByText('loading')
+  })
   waitFor(() => {
     getByText('count: 0')
   })
