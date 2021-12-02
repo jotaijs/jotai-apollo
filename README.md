@@ -44,7 +44,7 @@ TODO
 
 ## atomWithMutation
 
-`atomWithMutation` creates a new atom with a mutation. It internally uses [client.mutation](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.mutate).
+`atomWithMutation` creates a new atom with a mutation. It internally uses [client.mutate](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.mutate).
 
 ```js
 import { useAtom } from 'jotai'
@@ -80,7 +80,7 @@ TODO
 
 ## atomWithSubscription
 
-`atomWithSubscription` creates a new atom with a mutation. It internally uses [client.subscription](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.subscribe).
+`atomWithSubscription` creates a new atom with a mutation. It internally uses [client.subscribe](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.subscribe).
 
 ```js
 import { useAtom } from 'jotai'
