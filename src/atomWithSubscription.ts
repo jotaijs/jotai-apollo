@@ -38,6 +38,18 @@ export function atomWithSubscription<
   createSubscriptionArgs: (
     get: Getter
   ) => SubscriptionArgsWithPause<Variables, Data>,
+  getClient?: (get: Getter) => ApolloClient<unknown>
+): Atom<FetchResult<Data, Context, Extensions> | null>
+
+export function atomWithSubscription<
+  Data,
+  Variables extends object,
+  Context = DefaultContext,
+  Extensions = Record<string, any>
+>(
+  createSubscriptionArgs: (
+    get: Getter
+  ) => SubscriptionArgsWithPause<Variables, Data>,
   getClient: (get: Getter) => ApolloClient<unknown> = (get) => get(clientAtom)
 ) {
   const subscriptionResultAtom = atom((get) => {
