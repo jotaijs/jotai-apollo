@@ -122,6 +122,6 @@ Contributions are welcome.
 
 ### Contributing
 
-If you have found what you think is a bug/feature, please [file an issue](https://github.com/pmndrs/jotai/issues/new).
+If you have found what you think is a bug/feature, please [file an issue](https://github.com/pmndrs/jotai-apollo/issues/new).
 
-For questions around this integration, prefer [starting a discussion](https://github.com/pmndrs/jotai/discussions/new).
+For questions around this integration, prefer [starting a discussion](https://github.com/pmndrs/jotai-apollo/discussions/new).
