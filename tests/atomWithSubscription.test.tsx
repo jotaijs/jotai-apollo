@@ -58,11 +58,7 @@ it('subscription basic test', async () => {
   })
   waitFor(() => {
     getByText('count: 0')
-  })
-  waitFor(() => {
     getByText('count: 1')
-  })
-  waitFor(() => {
     getByText('count: 2')
   })
 })
@@ -129,11 +125,7 @@ it('pause test', async () => {
   fireEvent.click(getByText('toggle'))
   waitFor(() => {
     getByText('count: 0')
-  })
-  waitFor(() => {
     getByText('count: 1')
-  })
-  waitFor(() => {
     getByText('count: 2')
   })
 })
@@ -214,14 +206,8 @@ it('null client suspense', async () => {
   fireEvent.click(getByText('set'))
   waitFor(() => {
     getByText('loading')
-  })
-  waitFor(() => {
     getByText('count: 0')
-  })
-  waitFor(() => {
     getByText('count: 1')
-  })
-  waitFor(() => {
     getByText('count: 2')
   })
   fireEvent.click(getByText('unset'))
@@ -231,11 +217,7 @@ it('null client suspense', async () => {
   fireEvent.click(getByText('set'))
   waitFor(() => {
     getByText('count: 0')
-  })
-  waitFor(() => {
     getByText('count: 1')
-  })
-  waitFor(() => {
     getByText('count: 2')
   })
 })

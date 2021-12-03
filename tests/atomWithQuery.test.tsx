@@ -5,12 +5,15 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import { ApolloClient, gql } from '@apollo/client'
 
 it('basic atomWithQuery test', async () => {
+  let count = 0
   const clientMock = {
     query: async () => {
+      const currentCount = count
+      count++
       return {
         data: {
           getCount: {
-            count: 0,
+            count: currentCount,
           },
         },
       }
@@ -41,7 +44,7 @@ it('basic atomWithQuery test', async () => {
     )
   }
 
-  const { findByText } = render(
+  const { findByText, getByText } = render(
     <Provider>
       <Suspense fallback="loading">
         <Counter />
@@ -51,6 +54,11 @@ it('basic atomWithQuery test', async () => {
 
   await findByText('loading')
   await findByText('count: 0')
+  waitFor(() => {
+    getByText('count: 1')
+    getByText('count: 2')
+    getByText('count: 3')
+  })
 })
 
 it('variables atomWithQuery test', async () => {
