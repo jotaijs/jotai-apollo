@@ -1,5 +1,9 @@
 # Jotai Apollo 🚀👻
 
+[![Discord Shield](https://img.shields.io/discord/740090768164651008?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff)](https://discord.gg/poimandres)
+
+Minimal `@apollo/client` integration for jotai, similar to `jotai/urql`.
+
 ## Install
 
 You have to install `@apollo/client` and `jotai` to access this bundle and its functions.
@@ -78,7 +82,7 @@ const App = () => {
 
 ### Examples
 
-TODO
+Contributions are welcome.
 
 ## atomWithSubscription
 
@@ -114,4 +118,10 @@ const App = () => {
 
 ### Examples
 
-TODO
+Contributions are welcome.
+
+### Contributing
+
+If you have found what you think is a bug/feature, please [file an issue](https://github.com/pmndrs/jotai/issues/new).
+
+For questions around this integration, prefer [starting a discussion](https://github.com/pmndrs/jotai/discussions/new).
