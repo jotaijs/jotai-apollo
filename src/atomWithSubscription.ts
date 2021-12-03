@@ -74,12 +74,19 @@ export function atomWithSubscription<
     ) => void = () => {
       throw new Error('setting result without mount')
     }
-    const listener = (result: FetchResult<Data, Context, Extensions>) => {
+    const listener = async (
+      result:
+        | FetchResult<Data, Context, Extensions>
+        | Promise<FetchResult<Data, Context, Extensions>>
+    ) => {
+      if (!('data' in (await result))) {
+        throw new Error('result does not have data')
+      }
       if (resolve) {
-        resolve(result)
+        resolve(await result)
         resolve = null
       } else {
-        setResult(result)
+        setResult(await result)
       }
     }
 
