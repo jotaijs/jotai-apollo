@@ -14,20 +14,17 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "test": "jest && jest --setupFiles ./tests/setup.ts",
+    "test": "jest --setupFiles ./tests/setup.ts",
     "test:ci": "tsc --noEmit && jest --setupFiles ./tests/setup.ts",
     "test:dev": "jest --setupFiles ./tests/setup.ts --watch --no-coverage",
     "test:coverage:watch": "jest --setupFiles ./tests/setup.ts --watch",
     "prepare": "husky install"
   },
-  "files": [
-    "**"
-  ],
+  "files": ["**"],
   "peerDependencies": {
     "@apollo/client": "*",
     "graphql": "*",
-    "jotai": "*",
-    "wonka": "*"
+    "jotai": "*"
   },
   "peerDependenciesMeta": {
     "jotai": {
@@ -37,9 +34,6 @@
       "optional": false
     },
     "graphql": {
-      "optional": false
-    },
-    "wonka": {
       "optional": false
     }
   },
@@ -63,7 +57,6 @@
     "react-dom": "^17.0.2",
     "tsup": "^5.10.0",
     "typescript": "^4.5.2",
-    "wonka": "^4.0.15",
     "zen-observable": "^0.8.15"
   },
   "jest": {
@@ -72,24 +65,30 @@
     "moduleNameMapper": {
       "^jotai-apollo$": "<rootDir>/src/index.ts"
     },
-    "modulePathIgnorePatterns": [
-      "dist"
-    ],
+    "modulePathIgnorePatterns": ["dist"],
     "testRegex": "test.(js|ts|tsx)$",
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
-    "coverageReporters": [
-      "json",
-      "html",
-      "text",
-      "text-summary"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,ts,tsx}",
-      "tests/**/*.{js,ts,tsx}"
-    ],
+    "coverageReporters": ["json", "html", "text", "text-summary"],
+    "collectCoverageFrom": ["src/**/*.{js,ts,tsx}", "tests/**/*.{js,ts,tsx}"],
     "transform": {
-      "^.+\\.(t|j)sx?$": "@swc/jest"
+      "^.+\\.(t|j)sx?$": [
+        "@swc/jest",
+        {
+          "sourceMaps": true,
+          "jsc": {
+            "parser": {
+              "syntax": "typescript",
+              "tsx": true,
+              "dynamicImport": true
+            },
+            "target": "es2021"
+          },
+          "module": {
+            "type": "commonjs"
+          }
+        }
+      ]
     }
   },
   "prettier": {
@@ -101,8 +100,6 @@
     "printWidth": 80
   },
   "lint-staged": {
-    "*.{js,ts,tsx,md}": [
-      "prettier --write"
-    ]
+    "*.{js,ts,tsx,md}": ["prettier --write"]
   }
 }
