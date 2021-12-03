@@ -5,7 +5,6 @@ import {
   QueryOptions,
 } from '@apollo/client'
 import { atom, Getter, PrimitiveAtom, WritableAtom } from 'jotai'
-import { make, pipe, skip, subscribe } from 'wonka'
 import { clientAtom } from './clientAtom'
 
 type QueryArgs<
@@ -86,22 +85,18 @@ export function atomWithQuery<
 
     resultAtom.onMount = (update) => {
       setResult = update
-      const source = make<ApolloQueryResult<Data>>(({ next, complete }) => {
-        let cancelled = false
 
-        client.query(args).then((apolloQueryResult) => {
-          if (cancelled) {
-            return
-          }
-          next(apolloQueryResult)
-          complete()
+      client
+        .query(args)
+        .then(async (value) => {
+          await new Promise((resolve) => setTimeout(resolve, 0))
+          return value
         })
-        return () => {
-          cancelled = true
-        }
-      })
-      const subscription = pipe(source, skip(1), subscribe(listener))
-      return () => subscription.unsubscribe()
+        .then(listener)
+        .catch(() => {
+          // TODO error handling
+        })
+      return
     }
     return resultAtom
   }
