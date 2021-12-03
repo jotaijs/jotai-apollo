@@ -5,7 +5,7 @@
 You have to install `@apollo/client` and `jotai` to access this bundle and its functions.
 
 ```
-yarn add jotai @apollo/client graphql
+yarn add jotai-apollo jotai @apollo/client
 ```
 
 ## atomWithQuery
@@ -42,7 +42,7 @@ const App = () => {
 
 ### Examples
 
-TODO
+[Rick & Morty characters](https://stackblitz.com/edit/react-ts-wjkdmk?file=index.tsx)
 
 ## atomWithMutation
 
