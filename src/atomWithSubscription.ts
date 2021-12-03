@@ -5,7 +5,6 @@ import {
   OperationVariables,
   SubscriptionOptions,
 } from '@apollo/client'
-import { fromObservable, pipe, subscribe } from 'wonka'
 import { atom } from 'jotai'
 import type { Atom, Getter } from 'jotai'
 import { clientAtom } from './clientAtom'
@@ -54,13 +53,15 @@ export function atomWithSubscription<
 ) {
   const subscriptionResultAtom = atom((get) => {
     const args = createSubscriptionArgs(get)
-    if ((args as { pause?: boolean }).pause) {
+    if (args.pause) {
       return { args }
     }
     const client = getClient(get)
+
     let resolve:
       | ((result: FetchResult<Data, Context, Extensions>) => void)
       | null = null
+
     const resultAtom = atom<
       | FetchResult<Data, Context, Extensions>
       | Promise<FetchResult<Data, Context, Extensions>>
@@ -69,31 +70,29 @@ export function atomWithSubscription<
         resolve = r
       })
     )
+
     let setResult: (
       result: FetchResult<Data, Context, Extensions>
     ) => void = () => {
       throw new Error('setting result without mount')
     }
+
     const listener = async (
-      result:
-        | FetchResult<Data, Context, Extensions>
-        | Promise<FetchResult<Data, Context, Extensions>>
+      result: FetchResult<Data, any, any> | Promise<FetchResult<Data, any, any>>
     ) => {
-      if (!('data' in (await result))) {
+      const resolvedResult = await result
+      if (!('data' in resolvedResult)) {
         throw new Error('result does not have data')
       }
       if (resolve) {
-        resolve(await result)
+        resolve(resolvedResult)
         resolve = null
       } else {
-        setResult(await result)
+        setResult(resolvedResult)
       }
     }
 
-    const source = fromObservable<FetchResult<Data, Context, Extensions>>(
-      client.subscribe(args)
-    )
-    const subscriptionInRender = pipe(source, subscribe(listener))
+    const subscriptionInRender = client.subscribe(args).subscribe(listener)
 
     let timer: NodeJS.Timeout | null = setTimeout(() => {
       timer = null
@@ -107,11 +106,7 @@ export function atomWithSubscription<
         clearTimeout(timer)
         subscription = subscriptionInRender
       } else {
-        const mountSource = fromObservable<
-          FetchResult<Data, Context, Extensions>
-        >(client.subscribe(args))
-
-        subscription = pipe(mountSource, subscribe(listener))
+        subscription = client.subscribe(args).subscribe(listener)
       }
 
       return () => subscription.unsubscribe()

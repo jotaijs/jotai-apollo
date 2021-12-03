@@ -2,14 +2,14 @@ import React, { Suspense } from 'react'
 import Observable from 'zen-observable'
 import { atom, Provider, useAtom } from 'jotai'
 import { atomWithSubscription } from 'jotai-apollo'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import { ApolloClient, gql } from '@apollo/client'
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 it('subscription basic test', async () => {
   const observable = Observable.of(0, 1, 2).map(async (count) => {
-    await delay(10)
+    await delay(100 * count)
     return {
       data: {
         getCount: {
@@ -45,25 +45,21 @@ it('subscription basic test', async () => {
     )
   }
 
-  const { getByText } = render(
+  const { findByText } = render(
     <Provider>
       <Suspense fallback="loading">
         <Counter />
       </Suspense>
     </Provider>
   )
+  await findByText('loading')
 
-  waitFor(() => {
-    getByText('loading')
-  })
-  waitFor(() => {
-    getByText('count: 0')
-    getByText('count: 1')
-    getByText('count: 2')
-  })
+  await findByText('count: 0')
+  await findByText('count: 1')
+  await findByText('count: 2')
 })
 
-it('pause test', async () => {
+it('subscription pause test', async () => {
   const subscription = gql`
     subscription Count {
       getCount {
@@ -73,7 +69,7 @@ it('pause test', async () => {
   `
 
   const observable = Observable.of(0, 1, 2).map(async (count) => {
-    await delay(10)
+    await delay(100 * count)
     return {
       data: {
         getCount: {
@@ -120,20 +116,17 @@ it('pause test', async () => {
     </Provider>
   )
 
-  await findByText('count: paused')
-
   fireEvent.click(getByText('toggle'))
-  waitFor(() => {
-    getByText('count: 0')
-    getByText('count: 1')
-    getByText('count: 2')
-  })
+  await findByText('count: paused')
+  await findByText('count: 0')
+  await findByText('count: 1')
+  await findByText('count: 2')
 })
 
-it('null client suspense', async () => {
+it('subscription null client suspense', async () => {
   const generateClient = () => {
     const observable = Observable.of(0, 1, 2).map(async (count) => {
-      await delay(10)
+      await delay(100 * count)
       return {
         data: {
           getCount: {
@@ -204,20 +197,14 @@ it('null client suspense', async () => {
 
   await findByText('no data')
   fireEvent.click(getByText('set'))
-  waitFor(() => {
-    getByText('loading')
-    getByText('count: 0')
-    getByText('count: 1')
-    getByText('count: 2')
-  })
+  await findByText('loading')
+  await findByText('count: 0')
+  await findByText('count: 1')
+  await findByText('count: 2')
   fireEvent.click(getByText('unset'))
-  waitFor(() => {
-    getByText('no data')
-  })
+  await findByText('no data')
   fireEvent.click(getByText('set'))
-  waitFor(() => {
-    getByText('count: 0')
-    getByText('count: 1')
-    getByText('count: 2')
-  })
+  await findByText('count: 0')
+  await findByText('count: 1')
+  await findByText('count: 2')
 })
