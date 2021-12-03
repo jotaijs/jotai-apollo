@@ -1,9 +1,11 @@
+# Jotai Apollo 🚀👻
+
 ## Install
 
-You have to install `@apollo/client`, `jotai` and `wonka` to access this bundle and its functions.
+You have to install `@apollo/client` and `jotai` to access this bundle and its functions.
 
 ```
-yarn add jotai @apollo/client graphql wonka
+yarn add jotai @apollo/client graphql
 ```
 
 ## atomWithQuery
