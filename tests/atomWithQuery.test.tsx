@@ -1,10 +1,10 @@
 import React, { Suspense } from 'react'
 import { atom, Provider, useAtom } from 'jotai'
-import { atomsWithQuery } from 'jotai-apollo'
+import { atomWithQuery } from 'jotai-apollo'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 
-it('basic atomsWithQuery test', async () => {
+it('basic atomWithQuery test', async () => {
   let count = 0
   const client = new ApolloClient({ cache: new InMemoryCache() })
 
@@ -32,7 +32,7 @@ it('basic atomsWithQuery test', async () => {
     }
   `
 
-  const [countAtom] = atomsWithQuery<{ getCount: { count: number } }, {}>(
+  const countAtom = atomWithQuery<{ getCount: { count: number } }, {}>(
     () => ({
       query,
     }),
@@ -60,7 +60,7 @@ it('basic atomsWithQuery test', async () => {
   await findByText('count: 0')
 })
 
-it('variables atomsWithQuery test', async () => {
+it('variables atomWithQuery test', async () => {
   const users: Record<string, number> = {
     aslemammad: 0,
     daishi: 1,
@@ -71,7 +71,6 @@ it('variables atomsWithQuery test', async () => {
   const clientMock = {
     query: async ({ variables }: { variables: { name: string } }) => {
       return {
-        loading: false,
         data: {
           user: {
             id: users[variables.name],
@@ -91,10 +90,7 @@ it('variables atomsWithQuery test', async () => {
     }
   `
 
-  const [countAtom, countStatusAtom] = atomsWithQuery<
-    { user: { id: number } },
-    { name: string }
-  >(
+  const countAtom = atomWithQuery<{ user: { id: number } }, { name: string }>(
     () => ({
       query,
       variables: { name: 'aslemammad' },
@@ -104,11 +100,9 @@ it('variables atomsWithQuery test', async () => {
 
   const Counter = () => {
     const [data] = useAtom(countAtom)
-    const [{ loading }] = useAtom(countStatusAtom)
     return (
       <>
         <div>count: {data.user.id}</div>
-        <div>loading: {loading ? 'true' : 'false'}</div>
       </>
     )
   }
@@ -123,10 +117,9 @@ it('variables atomsWithQuery test', async () => {
 
   await findByText('loading')
   await findByText('count: 0')
-  await findByText('loading: false')
 })
 
-it('reexecute test atomsWithQuery', async () => {
+it('reexecute test', async () => {
   let count = Math.random()
 
   const client = new ApolloClient({ cache: new InMemoryCache() })
@@ -152,20 +145,14 @@ it('reexecute test atomsWithQuery', async () => {
     }
   `
 
-  const fetchCountMock = jest.fn()
-
-  const [countAtom] = atomsWithQuery<
+  const countAtom = atomWithQuery<
     { getCount: { count: number } },
     { count: number }
   >(
-    () => {
-      fetchCountMock()
-
-      return {
-        query,
-        variables: { count: count },
-      }
-    },
+    () => ({
+      query,
+      variables: { count: count },
+    }),
     () => client
   )
 
@@ -177,7 +164,7 @@ it('reexecute test atomsWithQuery', async () => {
         <button
           onClick={() => {
             count = Math.random()
-            dispatch({ type: 'refetch' })
+            dispatch({ type: 'refetch', opts: { variables: { count: count } } })
           }}>
           button
         </button>
@@ -193,8 +180,12 @@ it('reexecute test atomsWithQuery', async () => {
     </Provider>
   )
 
+  let prevCount = count
   await findByText('loading')
+  await findByText(`count: ${prevCount}`)
+
   fireEvent.click(getByText('button'))
-  fireEvent.click(getByText('button'))
-  expect(fetchCountMock).toBeCalledTimes(3)
+  await findByText('loading')
+  expect(count).not.toBe(prevCount)
+  await findByText(`count: ${count}`)
 })

@@ -2414,10 +2414,10 @@ jest@^27.4.2:
     import-local "^3.0.2"
     jest-cli "^27.4.2"
 
-jotai@^1.8.6:
-  version "1.8.6"
-  resolved "https://registry.yarnpkg.com/jotai/-/jotai-1.8.6.tgz#4112f619c0153db9fc04025b871ab02a6800cfe1"
-  integrity sha512-6JXNd2ewR6Ur0hGY0kRJebQ++p7lN/8kNdGNXv7XT11FDPxAtPN2XLM+m0w4bV22f1knQlG8ZpVLfY6BEGF+UQ==
+jotai@^1.4.6:
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/jotai/-/jotai-1.4.6.tgz#ab2d271610a3d55f17eb61d01f3bff4a0c0f8784"
+  integrity sha512-7czbkpovyzeD51BFbidDRH/Dmx2bXfz7ygd4RRwx8jxsvAJHrRjxZ1bNw1yloIhljEFkrLZd3b232kQc7HTI+A==
 
 joycon@^3.0.1:
   version "3.1.0"
