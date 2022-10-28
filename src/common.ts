@@ -5,20 +5,20 @@ import type { Getter } from 'jotai'
 
 type Client<T extends unknown = unknown> = ApolloClient<T>
 
-type Observer<T> = {
+export type Observer<T> = {
   next: (value: T) => void
   error: (error: any) => void
   complete: () => void
 }
 
-type Subscription<T> = {
+export type Subscription<T> = {
   subscribe(observer: Partial<Observer<T>>): { unsubscribe: () => void }
 }
 
 export const createAtoms = <
   Args,
   Data,
-  Result extends Subscription<ApolloQueryResult<Data>>,
+  Result extends Subscription<any>,
   Action,
   ActionResult extends Promise<void> | void = void
 >(
@@ -64,7 +64,7 @@ export const createAtoms = <
     const source = get(sourceAtom)
 
     return atomWithObservable(() => ({
-      subscribe: (observer: Observer<ApolloQueryResult<Data>>) => {
+      subscribe: (observer: Observer<any>) => {
         const subscription = source.subscribe({
           next: (result) => {
             if (result.data) {

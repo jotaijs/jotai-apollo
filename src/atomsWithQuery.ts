@@ -13,12 +13,8 @@ type QueryArgs<
   Data = any
 > = QueryOptions<Variables, Data>
 
-type AtomWithQueryAction<
-  Variables extends object = OperationVariables,
-  Data = any
-> = {
+type AtomWithQueryAction = {
   type: 'refetch'
-  opts?: Partial<QueryArgs<Variables, Data>>
 }
 
 export const atomsWithQuery = <
@@ -28,8 +24,8 @@ export const atomsWithQuery = <
   getArgs: (get: Getter) => QueryArgs<Variables, Data>,
   getClient: (get: Getter) => ApolloClient<any> = (get) => get(clientAtom)
 ): readonly [
-  WritableAtom<Data, AtomWithQueryAction>,
-  WritableAtom<ApolloQueryResult<Data>, AtomWithQueryAction>
+  dataAtom: WritableAtom<Data, AtomWithQueryAction>,
+  statusAtom: WritableAtom<ApolloQueryResult<Data>, AtomWithQueryAction>
 ] => {
   return createAtoms(
     getArgs,

@@ -1,10 +1,10 @@
 import React, { Suspense } from 'react'
 import { atom, Provider, useAtom } from 'jotai'
 import { ApolloClient, gql } from '@apollo/client'
-import { atomWithMutation } from 'jotai-apollo'
+import { atomsWithMutation } from 'jotai-apollo'
 import { fireEvent, render } from '@testing-library/react'
 
-it('mutation basic test', async () => {
+it('atomsWith mutation basic test', async () => {
   const clientMock = {
     mutate: async () => {
       return {
@@ -24,19 +24,17 @@ it('mutation basic test', async () => {
       }
     }
   `
-  const countAtom = atomWithMutation<
+  const [countAtom] = atomsWithMutation<
     { setCount: { count: number } },
     Record<string, never>
-  >(
-    () => ({ mutation }),
-    () => clientMock
-  )
+  >(() => clientMock)
+
   const mutateAtom = atom(null, (_get, set) => {
-    set(countAtom, {})
+    set(countAtom, { mutation })
   })
 
   const Counter = () => {
-    const [{ data }] = useAtom(countAtom)
+    const [data] = useAtom(countAtom)
     return (
       <>
         <div>count: {data?.setCount.count}</div>
