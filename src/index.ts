@@ -1,4 +1,4 @@
 export * from './clientAtom'
 export * from './atomsWithQuery'
-export * from './atomWithMutation'
-export * from './atomWithSubscription'
+export * from './atomsWithMutation'
+export * from './atomsWithSubscription'
