@@ -67,6 +67,7 @@ export const createAtoms = <
       subscribe: (observer: Observer<any>) => {
         const subscription = source.subscribe({
           next: (result) => {
+            console.log(result)
             if (result.data) {
               observer.next?.(result)
             }
