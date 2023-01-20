@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+import React, { Suspense } from 'react'
 import Observable from 'zen-observable'
 import { Provider, useAtom } from 'jotai'
 import { atomsWithSubscription } from 'jotai-apollo'
