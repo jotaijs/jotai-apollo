@@ -1,121 +1,39 @@
 import {
   ApolloClient,
-  DefaultContext,
-  FetchResult,
   OperationVariables,
   SubscriptionOptions,
+  SubscriptionResult,
 } from '@apollo/client'
-import { atom } from 'jotai'
-import type { Atom, Getter } from 'jotai'
+import { WritableAtom } from 'jotai'
+import type { Getter } from 'jotai'
 import { clientAtom } from './clientAtom'
+import { createAtoms } from './common'
 
-type SubscriptionArgsWithPause<
-  Variables = OperationVariables,
-  Data = any
-> = SubscriptionOptions<Variables, Data> & {
-  pause?: boolean
+type Action = {
+  readonly type: 'refetch'
 }
 
-export function atomWithSubscription<
+export function atomsWithSubscription<
   Data,
-  Variables extends object,
-  Context = DefaultContext,
-  Extensions = Record<string, any>
+  Variables extends object = OperationVariables
 >(
-  createSubscriptionArgs: (
-    get: Getter
-  ) => SubscriptionArgsWithPause<Variables, Data>,
-  getClient?: (get: Getter) => ApolloClient<unknown>
-): Atom<FetchResult<Data, Context, Extensions>>
-
-export function atomWithSubscription<
-  Data,
-  Variables extends object,
-  Context = DefaultContext,
-  Extensions = Record<string, any>
->(
-  createSubscriptionArgs: (
-    get: Getter
-  ) => SubscriptionArgsWithPause<Variables, Data>,
-  getClient?: (get: Getter) => ApolloClient<unknown>
-): Atom<FetchResult<Data, Context, Extensions> | null>
-
-export function atomWithSubscription<
-  Data,
-  Variables extends object,
-  Context = DefaultContext,
-  Extensions = Record<string, any>
->(
-  createSubscriptionArgs: (
-    get: Getter
-  ) => SubscriptionArgsWithPause<Variables, Data>,
-  getClient: (get: Getter) => ApolloClient<unknown> = (get) => get(clientAtom)
-) {
-  const subscriptionResultAtom = atom((get) => {
-    const args = createSubscriptionArgs(get)
-    if (args.pause) {
-      return { args }
-    }
-    const client = getClient(get)
-
-    let resolve:
-      | ((result: FetchResult<Data, Context, Extensions>) => void)
-      | null = null
-
-    const resultAtom = atom<
-      | FetchResult<Data, Context, Extensions>
-      | Promise<FetchResult<Data, Context, Extensions>>
-    >(
-      new Promise<FetchResult<Data, Context, Extensions>>((r) => {
-        resolve = r
-      })
-    )
-
-    let setResult: (
-      result: FetchResult<Data, Context, Extensions>
-    ) => void = () => {
-      throw new Error('setting result without mount')
-    }
-
-    const listener = async (
-      result: FetchResult<Data, any, any> | Promise<FetchResult<Data, any, any>>
-    ) => {
-      const resolvedResult = await result
-      if (!('data' in resolvedResult)) {
-        throw new Error('result does not have data')
-      }
-      if (resolve) {
-        resolve(resolvedResult)
-        resolve = null
-      } else {
-        setResult(resolvedResult)
+  getArgs: (get: Getter) => SubscriptionOptions<Variables, Data>,
+  getClient: (get: Getter) => ApolloClient<any> = (get) => get(clientAtom)
+): readonly [
+  dataAtom: WritableAtom<Data, Action>,
+  statusAtom: WritableAtom<SubscriptionResult<Data, Variables>, Action>
+] {
+  return createAtoms(
+    (get) => getArgs(get),
+    getClient,
+    (client, args) => {
+      return client.subscribe(args)
+    },
+    (action, _client, refresh) => {
+      if (action.type === 'refetch') {
+        refresh()
+        return
       }
     }
-
-    const subscriptionInRender = client.subscribe(args).subscribe(listener)
-
-    let timer: NodeJS.Timeout | null = setTimeout(() => {
-      timer = null
-      subscriptionInRender.unsubscribe()
-    }, 1000)
-
-    resultAtom.onMount = (update) => {
-      setResult = update
-      let subscription: typeof subscriptionInRender
-      if (timer) {
-        clearTimeout(timer)
-        subscription = subscriptionInRender
-      } else {
-        subscription = client.subscribe(args).subscribe(listener)
-      }
-
-      return () => subscription.unsubscribe()
-    }
-    return { resultAtom, args }
-  })
-  const queryAtom = atom((get) => {
-    const { resultAtom } = get(subscriptionResultAtom)
-    return resultAtom ? get(resultAtom) : null
-  })
-  return queryAtom
+  )
 }
