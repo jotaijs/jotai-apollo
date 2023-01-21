@@ -12,14 +12,14 @@ You have to install `@apollo/client` and `jotai` to access this bundle and its f
 yarn add jotai-apollo jotai @apollo/client
 ```
 
-## atomWithQuery
+## atomsWithQuery
 
-`atomWithQuery` creates a new atom with a query. It internally uses [client.query](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.query).
+`atomsWithQuery` creates a new atom with a query. It internally uses [client.query](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.query).
 
 ```ts
 import { useAtom } from 'jotai'
 import { ApolloClient, gql } from '@apollo/client'
-import { atomWithQuery } from 'jotai-apollo'
+import { atomsWithQuery } from 'jotai-apollo'
 
 const client = new ApolloClient({ ... })
 
@@ -31,7 +31,7 @@ const query = gql`
   }
 `
 
-const countAtom = atomWithQuery(
+const [countAtom, countStatusAtom] = atomsWithQuery(
   (get) => ({
     query
   }),
@@ -39,7 +39,7 @@ const countAtom = atomWithQuery(
 )
 
 const App = () => {
-  const [{ data }] = useAtom(countAtom)
+  const [data] = useAtom(countAtom)
   return <div>{JSON.stringify(data)}</div>
 }
 ```
@@ -48,14 +48,14 @@ const App = () => {
 
 [Rick & Morty characters](https://stackblitz.com/edit/react-ts-wjkdmk?file=index.tsx)
 
-## atomWithMutation
+## atomsWithMutation
 
-`atomWithMutation` creates a new atom with a mutation. It internally uses [client.mutate](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.mutate).
+`atomsWithMutation` creates a new atom with a mutation. It internally uses [client.mutate](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.mutate).
 
 ```js
 import { useAtom } from 'jotai'
 import { ApolloClient, gql } from '@apollo/client'
-import { atomWithMutation } from 'jotai-apollo'
+import { atomsWithMutation } from 'jotai-apollo'
 
 const client = new ApolloClient({ ... })
 
@@ -67,7 +67,7 @@ const mutation = gql`
   }
 `
 
-const countAtom = atomWithMutation(
+const [countAtom, countStatusAtom] = atomsWithMutation(
   (get) => ({
     mutation
   }),
@@ -75,7 +75,7 @@ const countAtom = atomWithMutation(
 )
 
 const App = () => {
-  const [{ data }, mutate] = useAtom(countAtom)
+  const [data, mutate] = useAtom(countAtom)
   return <div>{JSON.stringify(data)} <button onClick={mutate}>Click me</button></div>
 }
 ```
@@ -84,14 +84,14 @@ const App = () => {
 
 Contributions are welcome.
 
-## atomWithSubscription
+## atomsWithSubscription
 
-`atomWithSubscription` creates a new atom with a mutation. It internally uses [client.subscribe](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.subscribe).
+`atomsWithSubscription` creates a new atom with a mutation. It internally uses [client.subscribe](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.subscribe).
 
 ```js
 import { useAtom } from 'jotai'
 import { ApolloClient, gql } from '@apollo/client'
-import { atomWithSubscription } from 'jotai-apollo'
+import { atomsWithSubscription } from 'jotai-apollo'
 
 const client = new ApolloClient({ ... })
 
@@ -103,7 +103,7 @@ const subscription = gql`
   }
 `
 
-const countAtom = atomWithSubscription(
+const [countAtom, countStatusAtom] = atomsWithSubscription(
   (get) => ({
     query: subscription
   }),
@@ -111,7 +111,7 @@ const countAtom = atomWithSubscription(
 )
 
 const App = () => {
-  const [{ data }] = useAtom(countAtom)
+  const [data] = useAtom(countAtom)
   return <div>{JSON.stringify(data)}</div>
 }
 ```
