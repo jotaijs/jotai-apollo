@@ -24,7 +24,7 @@
     "prepare": "husky install"
   },
   "files": [
-    "**"
+    "dist"
   ],
   "peerDependencies": {
     "@apollo/client": "*",
