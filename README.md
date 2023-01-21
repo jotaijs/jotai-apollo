@@ -14,7 +14,7 @@ yarn add jotai-apollo jotai @apollo/client
 
 ## atomsWithQuery
 
-`atomsWithQuery` creates a new atom with a query. It internally uses [client.query](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.query).
+`atomsWithQuery` creates two atoms with a query. It internally uses [client.query](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.query).
 
 ```ts
 import { useAtom } from 'jotai'
@@ -30,7 +30,6 @@ const query = gql`
     }
   }
 `
-
 const [countAtom, countStatusAtom] = atomsWithQuery(
   (get) => ({
     query
@@ -44,13 +43,28 @@ const App = () => {
 }
 ```
 
+type:
+
+```ts
+export const atomsWithQuery = <
+  Data,
+  Variables extends object = OperationVariables
+>(
+  getArgs: (get: Getter) => QueryArgs<Variables, Data>,
+  getClient: (get: Getter) => ApolloClient<any> = (get) => get(clientAtom)
+): readonly [
+  dataAtom: WritableAtom<Data, AtomWithQueryAction>,
+  statusAtom: WritableAtom<ApolloQueryResult<Data>, AtomWithQueryAction>
+]
+```
+
 ### Examples
 
 [Rick & Morty characters](https://stackblitz.com/edit/react-ts-wjkdmk?file=index.tsx)
 
 ## atomsWithMutation
 
-`atomsWithMutation` creates a new atom with a mutation. It internally uses [client.mutate](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.mutate).
+`atomsWithMutation` creates two atoms with a mutation. It internally uses [client.mutate](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.mutate).
 
 ```js
 import { useAtom } from 'jotai'
@@ -80,13 +94,38 @@ const App = () => {
 }
 ```
 
+type:
+
+```ts
+export function atomsWithMutation<
+  Data = any,
+  Variables = OperationVariables,
+  Context = DefaultContext,
+  Extensions = Record<string, any>,
+  Result extends FetchResult<Data, Context, Extensions> = FetchResult<
+    Data,
+    Context,
+    Extensions
+  >
+>(
+  getClient: (get: Getter) => ApolloClient<any> = (get) => get(clientAtom)
+): readonly [
+  dataAtom: WritableAtom<Data, Action<Data, Variables, Context>, Promise<void>>,
+  statusAtom: WritableAtom<
+    Result,
+    Action<Data, Variables, Context>,
+    Promise<void>
+  >
+]
+```
+
 ### Examples
 
 Contributions are welcome.
 
 ## atomsWithSubscription
 
-`atomsWithSubscription` creates a new atom with a mutation. It internally uses [client.subscribe](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.subscribe).
+`atomsWithSubscription` creates two atoms with a mutation. It internally uses [client.subscribe](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.subscribe).
 
 ```js
 import { useAtom } from 'jotai'
@@ -114,6 +153,21 @@ const App = () => {
   const [data] = useAtom(countAtom)
   return <div>{JSON.stringify(data)}</div>
 }
+```
+
+type:
+
+```ts
+export function atomsWithSubscription<
+  Data,
+  Variables extends object = OperationVariables
+>(
+  getArgs: (get: Getter) => SubscriptionOptions<Variables, Data>,
+  getClient: (get: Getter) => ApolloClient<any> = (get) => get(clientAtom)
+): readonly [
+  dataAtom: WritableAtom<Data, Action>,
+  statusAtom: WritableAtom<SubscriptionResult<Data, Variables>, Action>
+]
 ```
 
 ### Examples
