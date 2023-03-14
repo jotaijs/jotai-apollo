@@ -4,8 +4,7 @@ import {
   SubscriptionOptions,
   SubscriptionResult,
 } from '@apollo/client'
-import { WritableAtom } from 'jotai'
-import type { Getter } from 'jotai'
+import type { Getter, WritableAtom } from 'jotai/vanilla'
 import { clientAtom } from './clientAtom'
 import { createAtoms } from './common'
 
@@ -20,8 +19,8 @@ export function atomsWithSubscription<
   getArgs: (get: Getter) => SubscriptionOptions<Variables, Data>,
   getClient: (get: Getter) => ApolloClient<any> = (get) => get(clientAtom)
 ): readonly [
-  dataAtom: WritableAtom<Data, Action>,
-  statusAtom: WritableAtom<SubscriptionResult<Data, Variables>, Action>
+  dataAtom: WritableAtom<Data | Promise<Data>, [Action], void>,
+  statusAtom: WritableAtom<SubscriptionResult<Data, Variables>, [Action], void>
 ] {
   return createAtoms(
     (get) => getArgs(get),

@@ -1,7 +1,7 @@
 import { ApolloClient, ApolloQueryResult } from '@apollo/client'
-import { atom } from 'jotai'
-import { atomWithObservable } from 'jotai/utils'
-import type { Getter } from 'jotai'
+import { atom } from 'jotai/vanilla'
+import { atomWithObservable } from 'jotai/vanilla/utils'
+import type { Getter } from 'jotai/vanilla'
 
 type Client<T extends unknown = unknown> = ApolloClient<T>
 
@@ -20,7 +20,7 @@ export const createAtoms = <
   Data,
   Result extends Subscription<any>,
   Action,
-  ActionResult extends Promise<void> | void = void
+  ActionResult
 >(
   getArgs: (get: Getter) => Args,
   getClient: (get: Getter) => Client,
@@ -81,15 +81,22 @@ export const createAtoms = <
     }))
   })
 
+  const returnResultData = (result: any) => {
+    if (result.error) {
+      throw result.error
+    }
+    return result.data
+  }
+
   const dataAtom = atom(
     (get) => {
       const resultAtom = get(baseDataAtom)
       const result = get(resultAtom)
 
-      if (result.error) {
-        throw result.error
+      if (result instanceof Promise) {
+        return result.then(returnResultData)
       }
-      return result.data
+      return returnResultData(result)
     },
     (_get, set, action: Action) => set(statusAtom, action)
   )

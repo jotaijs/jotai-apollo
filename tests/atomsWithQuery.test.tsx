@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { atom, Provider, useAtom } from 'jotai'
+import { Provider, useAtom } from 'jotai/react'
 import { atomsWithQuery } from 'jotai-apollo'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'

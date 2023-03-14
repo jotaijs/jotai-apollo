@@ -4,7 +4,7 @@ import {
   QueryOptions,
   ApolloQueryResult,
 } from '@apollo/client'
-import { Getter, WritableAtom } from 'jotai'
+import { Getter, WritableAtom } from 'jotai/vanilla'
 import { clientAtom } from './clientAtom'
 import { createAtoms } from './common'
 
@@ -24,8 +24,8 @@ export const atomsWithQuery = <
   getArgs: (get: Getter) => QueryArgs<Variables, Data>,
   getClient: (get: Getter) => ApolloClient<any> = (get) => get(clientAtom)
 ): readonly [
-  dataAtom: WritableAtom<Data, AtomWithQueryAction>,
-  statusAtom: WritableAtom<ApolloQueryResult<Data>, AtomWithQueryAction>
+  dataAtom: WritableAtom<Data | Promise<Data>, [AtomWithQueryAction], void>,
+  statusAtom: WritableAtom<ApolloQueryResult<Data>, [AtomWithQueryAction], void>
 ] => {
   return createAtoms(
     getArgs,

@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 import Observable from 'zen-observable'
-import { Provider, useAtom } from 'jotai'
+import { Provider, useAtom } from 'jotai/react'
 import { atomsWithSubscription } from 'jotai-apollo'
 import { render } from '@testing-library/react'
 import { ApolloClient, gql } from '@apollo/client'
