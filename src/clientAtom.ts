@@ -1,5 +1,5 @@
 import { InMemoryCache, ApolloClient } from '@apollo/client'
-import { atom } from 'jotai'
+import { atom } from 'jotai/vanilla'
 
 const DEFAULT_URL =
   (typeof process === 'object' && process.env.JOTAI_APOLLO_DEFAULT_URL) ||

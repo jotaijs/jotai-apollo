@@ -4,10 +4,9 @@ import {
   FetchResult,
   OperationVariables,
   DefaultContext,
-  ApolloCache,
 } from '@apollo/client'
-import { WritableAtom } from 'jotai'
-import type { Getter } from 'jotai'
+import { WritableAtom } from 'jotai/vanilla'
+import type { Getter } from 'jotai/vanilla'
 import { clientAtom } from './clientAtom'
 import { createAtoms, Observer } from './common'
 
@@ -19,8 +18,8 @@ type Action<Data, Variables, Context> = MutationOptions<
 
 export function atomsWithMutation<
   Data = any,
-  Variables = OperationVariables,
-  Context = DefaultContext,
+  Variables extends OperationVariables = OperationVariables,
+  Context extends Record<string, any> = DefaultContext,
   Extensions = Record<string, any>,
   Result extends FetchResult<Data, Context, Extensions> = FetchResult<
     Data,
@@ -30,10 +29,14 @@ export function atomsWithMutation<
 >(
   getClient: (get: Getter) => ApolloClient<any> = (get) => get(clientAtom)
 ): readonly [
-  dataAtom: WritableAtom<Data, Action<Data, Variables, Context>, Promise<void>>,
+  dataAtom: WritableAtom<
+    Data | Promise<Data>,
+    [Action<Data, Variables, Context>],
+    Promise<void>
+  >,
   statusAtom: WritableAtom<
     Result,
-    Action<Data, Variables, Context>,
+    [Action<Data, Variables, Context>],
     Promise<void>
   >
 ] {
