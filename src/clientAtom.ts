@@ -11,13 +11,26 @@ const DEFAULT_URL =
 
 let defaultClient: ApolloClient<NormalizedCacheObject> | null = null
 
-export const clientAtom = atom(() => {
-  if (!defaultClient) {
-    defaultClient = new ApolloClient({
-      uri: DEFAULT_URL,
-      cache: new InMemoryCache(),
-    })
-  }
+const customClientAtom = atom<ApolloClient<unknown> | null>(null)
 
-  return defaultClient
-})
+export const clientAtom = atom(
+  (get) => {
+    const customClient = get(customClientAtom)
+
+    if (!customClient) {
+      return customClient
+    }
+
+    if (!defaultClient) {
+      defaultClient = new ApolloClient({
+        uri: DEFAULT_URL,
+        cache: new InMemoryCache(),
+      })
+    }
+
+    return defaultClient
+  },
+  (_get, set, client: ApolloClient<unknown>) => {
+    set(customClientAtom, client)
+  }
+)
