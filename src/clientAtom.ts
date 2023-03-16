@@ -17,7 +17,7 @@ export const clientAtom = atom(
   (get) => {
     const customClient = get(customClientAtom)
 
-    if (!customClient) {
+    if (customClient) {
       return customClient
     }
 
