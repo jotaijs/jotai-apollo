@@ -1,29 +1,11 @@
 import React, { Suspense } from 'react'
 import { Provider, useAtom } from 'jotai/react'
 import { atomsWithQuery } from 'jotai-apollo'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
+import { MockLink } from '@apollo/client/testing'
 
 it('basic atomsWithQuery test', async () => {
-  let count = 0
-  const client = new ApolloClient({ cache: new InMemoryCache() })
-
-  const clientMock = {
-    query: async () => {
-      const currentCount = count
-      count++
-      return {
-        data: {
-          getCount: {
-            count: currentCount,
-          },
-        },
-      }
-    },
-  } as unknown as ApolloClient<any>
-
-  client.query = clientMock.query
-
   const query = gql`
     query Count {
       getCount {
@@ -31,6 +13,16 @@ it('basic atomsWithQuery test', async () => {
       }
     }
   `
+
+  const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: new MockLink([
+      {
+        request: { query },
+        result: { data: { getCount: { count: 0 } } },
+      },
+    ]),
+  })
 
   const [countAtom] = atomsWithQuery<{ getCount: { count: number } }, {}>(
     () => ({
@@ -66,23 +58,6 @@ it('variables atomsWithQuery test', async () => {
     daishi: 1,
   }
 
-  const client = new ApolloClient({ cache: new InMemoryCache() })
-
-  const clientMock = {
-    query: async ({ variables }: { variables: { name: string } }) => {
-      return {
-        loading: false,
-        data: {
-          user: {
-            id: users[variables.name],
-          },
-        },
-      }
-    },
-  } as unknown as ApolloClient<any>
-
-  client.query = clientMock.query
-
   const query = gql`
     query GetUser($name: String!) {
       user(name: $name) {
@@ -90,6 +65,16 @@ it('variables atomsWithQuery test', async () => {
       }
     }
   `
+
+  const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: new MockLink([
+      {
+        request: { query, variables: { name: 'aslemammad' } },
+        result: { data: { user: { id: users['aslemammad'] } } },
+      },
+    ]),
+  })
 
   const [countAtom, countStatusAtom] = atomsWithQuery<
     { user: { id: number } },
@@ -127,22 +112,7 @@ it('variables atomsWithQuery test', async () => {
 })
 
 it('reexecute test atomsWithQuery', async () => {
-  let count = Math.random()
-
-  const client = new ApolloClient({ cache: new InMemoryCache() })
-  const clientMock = {
-    query: async ({ variables }: { variables: { count: number } }) => {
-      return {
-        data: {
-          getCount: {
-            count: variables.count,
-          },
-        },
-      }
-    },
-  } as unknown as ApolloClient<any>
-
-  client.query = clientMock.query
+  let count = 1
 
   const query = gql`
     query Count($count: Int) {
@@ -151,6 +121,24 @@ it('reexecute test atomsWithQuery', async () => {
       }
     }
   `
+
+  const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: new MockLink([
+      {
+        request: { query, variables: { count: 1 } },
+        result: { data: { getCount: { count: 4 } } },
+      },
+      {
+        request: { query, variables: { count: 2 } },
+        result: { data: { getCount: { count: 5 } } },
+      },
+      {
+        request: { query, variables: { count: 3 } },
+        result: { data: { getCount: { count: 6 } } },
+      },
+    ]),
+  })
 
   const fetchCountMock = jest.fn()
 
@@ -176,7 +164,7 @@ it('reexecute test atomsWithQuery', async () => {
         <div>count: {data.getCount.count}</div>
         <button
           onClick={() => {
-            count = Math.random()
+            count++
             dispatch({ type: 'refetch' })
           }}>
           button
@@ -194,7 +182,12 @@ it('reexecute test atomsWithQuery', async () => {
   )
 
   await findByText('loading')
+  await findByText('count: 4')
   fireEvent.click(getByText('button'))
+  await findByText('loading')
+  await findByText('count: 5')
   fireEvent.click(getByText('button'))
+  await findByText('loading')
+  await findByText('count: 6')
   expect(fetchCountMock).toBeCalledTimes(3)
 })

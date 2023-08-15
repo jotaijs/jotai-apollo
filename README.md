@@ -14,7 +14,7 @@ yarn add jotai-apollo jotai @apollo/client
 
 ## atomsWithQuery
 
-`atomsWithQuery` creates two atoms with a query. It internally uses [client.query](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.query).
+`atomsWithQuery` creates two atoms with a query. It internally uses [client.watchQuery](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.watchQuery).
 
 ```ts
 import { useAtom } from 'jotai'
