@@ -1,8 +1,8 @@
 import {
   ApolloClient,
   OperationVariables,
-  QueryOptions,
   ApolloQueryResult,
+  WatchQueryOptions,
 } from '@apollo/client'
 import { Getter, WritableAtom } from 'jotai/vanilla'
 import { clientAtom } from './clientAtom'
@@ -11,7 +11,7 @@ import { createAtoms } from './common'
 type QueryArgs<
   Variables extends object = OperationVariables,
   Data = any
-> = QueryOptions<Variables, Data>
+> = WatchQueryOptions<Variables, Data>
 
 type AtomWithQueryAction = {
   type: 'refetch'
@@ -30,21 +30,7 @@ export const atomsWithQuery = <
   return createAtoms(
     getArgs,
     getClient,
-    (client, args) => {
-      return {
-        subscribe: (observer) => {
-          client
-            .query(args)
-            .then((result) => {
-              observer.next?.(result)
-            })
-            .catch((error) => {
-              observer.error?.(error)
-            })
-          return { unsubscribe: () => {} }
-        },
-      }
-    },
+    (client, args) => client.watchQuery(args),
     (action: AtomWithQueryAction, _client, refresh) => {
       if (action.type === 'refetch') {
         refresh()
